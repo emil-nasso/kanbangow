@@ -1,0 +1,21 @@
+package main
+
+const kanbanflowAPIKey = ""
+const bugSwimlaneID = ""
+const doneColumnID = ""
+
+var preDevColumns []string
+var devColumns []string
+var pastDevColumns []string
+
+func config() {
+	preDevColumnIDs = []string{
+		"",
+	}
+	devColumns = []string{
+		"",
+	}
+	postDevColumns = []string{
+		"",
+	}
+}
