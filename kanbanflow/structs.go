@@ -40,13 +40,50 @@ type TaskDate struct {
 	DueTimestampLocal string `json:"dueTimestampLocal"`
 }
 
-// CreateTaskWebhook - The data sent from kanbanflow
-type CreateTaskWebhook struct {
+// TaskWebhook is the base struct for multiple webhooks
+type TaskWebhook struct {
 	EventType    string `json:"eventType"`
 	UserID       string `json:"userId"`
 	UserFullName string `json:"userFullName"`
 	Timestamp    string `json:"timestamp"`
 	Task         Task   `json:"task"`
+}
+
+// CreateTaskWebhook - The data sent from kanbanflow when creating a task
+type CreateTaskWebhook struct {
+	TaskWebhook
+}
+
+// ChangeTaskWebhook - The data sent from kanbanflow when changing a task
+type ChangeTaskWebhook struct {
+	TaskWebhook
+	ChangedProperties []ChangedProperty `json:"changedProperties"`
+}
+
+// CommentCreateWebhook - New comment created webhook
+type CommentCreateWebhook struct {
+	EventType    string       `json:"eventType"`
+	UserID       string       `json:"userId"`
+	UserFullName string       `json:"userFullName"`
+	Timestamp    string       `json:"timestamp"`
+	TaskID       string       `json:"taskId"`
+	TaskName     string       `json:"taskName"`
+	TaskComment  *TaskComment `json:"taskComment"`
+}
+
+// TaskComment - a comment published on a task
+type TaskComment struct {
+	ID               string `json:"_id"`
+	Text             string `json:"text"`
+	AuthorUserID     string `json:"authorUserId"`
+	CreatedTimestamp string `json:"createdTimestamp"`
+}
+
+// ChangedProperty represents a property that was changed on a task
+type ChangedProperty struct {
+	Property string `json:"property"`
+	OldValue string `json:"oldValue"`
+	NewValue string `json:"newValue"`
 }
 
 // TaskID - A kanbanflow task id. It has an optional prefix.

@@ -60,10 +60,81 @@ func TestCreateTaskWebhook(t *testing.T) {
   }`)
 
 	s := &CreateTaskWebhook{}
-	encodeAndDecodeData(t, data, s)
+	decodeAndEncodeData(t, data, s)
 }
 
-func encodeAndDecodeData(t *testing.T, data []byte, s interface{}) {
+func TestChangeTaskWebhook(t *testing.T) {
+	data := []byte(`{
+    "eventType": "taskChanged",
+    "userId": "ec1b92fb1868c44aa9a041583c000e2a",
+    "userFullName": "John Doe",
+    "timestamp": "2015-10-20T14:45:13.775Z",
+    "task": {
+        "_id": "60e8b629fc8d6d28b513807d7d86b133",
+        "name": "Write report",
+        "description": "For school",
+        "color": "blue",
+        "columnId": "ff31c6b2374911e49d115f7064763810",
+        "totalSecondsSpent": 0,
+        "totalSecondsEstimate": 0,
+        "swimlaneId": "e037a6400e8911e5bdc9053860f3e5c0",
+        "dates": [
+            {
+                "targetColumnId": "ff31c6b4374911e49d115f7064763810",
+                "status": "active",
+                "dateType": "dueDate",
+                "dueTimestamp": "2015-10-20T15:00:00Z",
+                "dueTimestampLocal": "2015-10-20T17:00:00+02:00"
+            }
+        ],
+        "subTasks": [
+            {
+                "name": "Proofread",
+                "finished": false
+            }
+        ],
+        "labels": [
+            {
+                "name": "Writing",
+                "pinned": false
+            }
+        ]
+    },
+    "changedProperties": [
+        {
+            "property": "color",
+            "oldValue": "red",
+            "newValue": "blue"
+        }
+    ]
+		}`)
+	s := &ChangeTaskWebhook{}
+	decodeAndEncodeData(t, data, s)
+}
+
+func TestCommentCreateWebhook(t *testing.T) {
+	data := []byte(`{
+		    "eventType": "taskCommentCreated",
+		    "userId": "ec1b92fb1868c44aa9a041583c000e2a",
+		    "userFullName": "John Doe",
+		    "timestamp": "2015-10-20T14:45:26.138Z",
+		    "taskId": "60e8b629fc8d6d28b513807d7d86b133",
+		    "taskName": "Write report",
+		    "taskComment": {
+		        "_id": "6620beec99fb037e13cf21cf03019914",
+		        "text": "Finished writing report.",
+		        "authorUserId": "ec1b92fb1868c44aa9a041583c000e2a",
+		        "createdTimestamp": "2015-10-20T14:45:26"
+		    }
+		}`)
+	s := &CommentCreateWebhook{}
+	decodeAndEncodeData(t, data, s)
+}
+
+/*
+ * Test helpers
+ */
+func decodeAndEncodeData(t *testing.T, data []byte, s interface{}) {
 	reader := bytes.NewReader(data)
 	err := json.NewDecoder(reader).Decode(s)
 	if err != nil {
